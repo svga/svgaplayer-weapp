@@ -1,0 +1,24 @@
+{
+  "name": "svgaplayer-weapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js > ./dist/svgaplayer.weapp.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pako": "^2.0.3",
+    "uint8-to-base64": "^0.2.0",
+    "value-animator": "git+https://github.com/yyued/value-animator.git#mp"
+  },
+  "devDependencies": {
+    "@types/pako": "^1.0.1",
+    "@types/wechat-miniprogram": "^3.3.0",
+    "browserify": "^17.0.0",
+    "tinyify": "^3.0.0",
+    "tsify": "^5.0.4",
+    "typescript": "^4.3.2"
+  }
+}
