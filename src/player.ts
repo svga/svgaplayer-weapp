@@ -9,6 +9,14 @@ interface Range {
   length: number;
 }
 
+interface DynamicText {
+  text: string;
+  size: number;
+  family: string;
+  color: string;
+  offset: { x: number; y: number };
+}
+
 export class Player {
   canvas?: WechatMiniprogram.Canvas;
   ctx?: WechatMiniprogram.CanvasContext;
@@ -69,7 +77,7 @@ export class Player {
     this._update();
   }
 
-  loadWXImage(data: Uint8Array): Promise<any> {
+  loadWXImage(data: Uint8Array | string): Promise<any> {
     if (!this.canvas) throw "no canvas";
     return new Promise((res, rej) => {
       const img: WechatMiniprogram.Image = this.canvas!.createImage();
@@ -80,7 +88,11 @@ export class Player {
         console.log(error);
         rej("image decoded fail.");
       };
-      img.src = "data:image/png;base64," + wx.arrayBufferToBase64(data);
+      if (typeof data === "string") {
+        img.src = data;
+      } else {
+        img.src = "data:image/png;base64," + wx.arrayBufferToBase64(data);
+      }
     });
   }
 
@@ -119,8 +131,8 @@ export class Player {
   }
 
   clear() {
-    // this._renderer.clear();
-    // this._renderer.clearAudios();
+    this._renderer?.clear();
+    // this._renderer?.clearAudios();
   }
 
   stepToFrame(frame: number, andPlay: boolean = false) {
@@ -147,40 +159,17 @@ export class Player {
     this.stepToFrame(frame, andPlay);
   }
 
-  // setImage(urlORbase64, forKey, transform) {
-  //   this._dynamicImage[forKey] = urlORbase64;
-  //   if (
-  //     transform !== undefined &&
-  //     transform instanceof Array &&
-  //     transform.length == 6
-  //   ) {
-  //     this._dynamicImageTransform[forKey] = transform;
-  //   }
-  // }
+  async setImage(src: Uint8Array | string, forKey: string): Promise<any> {
+    const img = await this.loadWXImage(src);
+    this._dynamicImage[forKey] = img;
+  }
 
-  // setText(textORMap, forKey) {
-  //   let text = typeof textORMap === "string" ? textORMap : textORMap.text;
-  //   let size =
-  //     (typeof textORMap === "object" ? textORMap.size : "14px") || "14px";
-  //   let family =
-  //     (typeof textORMap === "object" ? textORMap.family : "Arial") || "Arial";
-  //   let color =
-  //     (typeof textORMap === "object" ? textORMap.color : "#000000") ||
-  //     "#000000";
-  //   let offset = (typeof textORMap === "object"
-  //     ? textORMap.offset
-  //     : { x: 0.0, y: 0.0 }) || { x: 0.0, y: 0.0 };
-  //   this._dynamicText[forKey] = {
-  //     text,
-  //     style: `${size} ${family}`,
-  //     color,
-  //     offset,
-  //   };
-  // }
+  setText(dynamicText: DynamicText, forKey: string) {
+    this._dynamicText[forKey] = dynamicText;
+  }
 
   clearDynamicObjects() {
     this._dynamicImage = {};
-    this._dynamicImageTransform = {};
     this._dynamicText = {};
   }
 
@@ -204,9 +193,8 @@ export class Player {
   _animator: ValueAnimator = new ValueAnimator();
   _forwardAnimating = false;
   _currentFrame = 0;
-  _dynamicImage = {};
-  _dynamicImageTransform = {};
-  _dynamicText = {};
+  _dynamicImage: { [key: string]: any } = {};
+  _dynamicText: { [key: string]: DynamicText } = {};
 
   _onFinished?: () => void;
   _onFrame?: (frame: number) => void;
@@ -321,7 +309,11 @@ export class Player {
 
   _update() {
     this._resize();
-    this._renderer?.drawFrame(this._currentFrame);
-    this._renderer?.playAudio(this._currentFrame);
+    if (this._renderer) {
+      this._renderer._dynamicImage = this._dynamicImage;
+      this._renderer._dynamicText = this._dynamicText;
+      this._renderer.drawFrame(this._currentFrame);
+      this._renderer.playAudio(this._currentFrame);
+    }
   }
 }

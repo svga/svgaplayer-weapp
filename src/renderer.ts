@@ -13,6 +13,14 @@ interface Point {
   y2: number;
 }
 
+interface DynamicText {
+  text: string;
+  size: number;
+  family: string;
+  color: string;
+  offset: { x: number; y: number };
+}
+
 const validMethods = "MLHVCSQRZmlhvcsqrz";
 
 export class Renderer {
@@ -30,6 +38,9 @@ export class Renderer {
     tx: number;
     ty: number;
   };
+
+  _dynamicImage: { [key: string]: any } = {};
+  _dynamicText: { [key: string]: DynamicText } = {};
 
   clear() {
     const ctx = this.ctx;
@@ -129,29 +140,24 @@ export class Renderer {
     );
     let bitmapKey = sprite.imageKey?.replace(".matte", "");
     if (!bitmapKey) return;
-    let img = this.videoItem.decodedImages[bitmapKey];
+    let img =
+      this._dynamicImage[bitmapKey] ?? this.videoItem.decodedImages[bitmapKey];
     if (frameItem.maskPath !== undefined && frameItem.maskPath !== null) {
       frameItem.maskPath._styles = undefined;
       this.drawBezier(frameItem.maskPath);
       ctx.clip();
     }
-    // if (this._owner._dynamicImageTransform[sprite.imageKey] !== undefined) {
-    //   ctx.save();
-    //   const concatTransform =
-    //     this._owner._dynamicImageTransform[sprite.imageKey];
-    //   ctx.transform(
-    //     concatTransform[0],
-    //     concatTransform[1],
-    //     concatTransform[2],
-    //     concatTransform[3],
-    //     concatTransform[4],
-    //     concatTransform[5]
-    //   );
-    // }
-    ctx.drawImage(img, 0, 0, img.width, img.height);
-    // if (this._owner._dynamicImageTransform[sprite.imageKey] !== undefined) {
-    //   ctx.restore();
-    // }
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      img.width,
+      img.height,
+      0,
+      0,
+      frameItem.layout.width,
+      frameItem.layout.height
+    );
     frameItem.shapes &&
       frameItem.shapes.forEach((shape: any) => {
         if (shape.type === "shape" && shape.pathArgs && shape.pathArgs.d) {
@@ -185,30 +191,31 @@ export class Renderer {
           );
         }
       });
-    // let dynamicText = this._owner._dynamicText[sprite.imageKey];
-    // if (dynamicText !== undefined) {
-    //   ctx.textBaseline = "middle";
-    //   ctx.font = dynamicText.style;
-    //   let textWidth = ctx.measureText(dynamicText.text).width;
-    //   ctx.fillStyle = dynamicText.color;
-    //   let offsetX =
-    //     dynamicText.offset !== undefined && dynamicText.offset.x !== undefined
-    //       ? isNaN(parseFloat(dynamicText.offset.x))
-    //         ? 0
-    //         : parseFloat(dynamicText.offset.x)
-    //       : 0;
-    //   let offsetY =
-    //     dynamicText.offset !== undefined && dynamicText.offset.y !== undefined
-    //       ? isNaN(parseFloat(dynamicText.offset.y))
-    //         ? 0
-    //         : parseFloat(dynamicText.offset.y)
-    //       : 0;
-    //   ctx.fillText(
-    //     dynamicText.text,
-    //     (frameItem.layout.width - textWidth) / 2 + offsetX,
-    //     frameItem.layout.height / 2 + offsetY
-    //   );
-    // }
+    let dynamicText = this._dynamicText[bitmapKey];
+    if (dynamicText !== undefined) {
+      ctx.font = `${dynamicText.size}px ${
+        dynamicText.family ?? 'Arial'
+      }`;
+      let textWidth = ctx.measureText(dynamicText.text).width;
+      ctx.fillStyle = dynamicText.color;
+      let offsetX =
+        dynamicText.offset !== undefined && dynamicText.offset.x !== undefined
+          ? isNaN(dynamicText.offset.x)
+            ? 0
+            : dynamicText.offset.x
+          : 0;
+      let offsetY =
+        dynamicText.offset !== undefined && dynamicText.offset.y !== undefined
+          ? isNaN(dynamicText.offset.y)
+            ? 0
+            : dynamicText.offset.y
+          : 0;
+      ctx.fillText(
+        dynamicText.text,
+        (frameItem.layout.width - textWidth) / 2 + offsetX,
+        frameItem.layout.height / 2 + offsetY
+      );
+    }
     ctx.restore();
   }
 
