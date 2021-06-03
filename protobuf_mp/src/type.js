@@ -422,13 +422,6 @@ Type.prototype.setup = function setup() {
     for (var i = 0; i < /* initializes */ this.fieldsArray.length; ++i)
         types.push(this._fieldsArray[i].resolve().resolvedType);
 
-    // Replace setup methods with type-specific generated functions
-    this.encode = encoder(this)({
-        Writer : Writer,
-        types  : types,
-        util   : util
-    });
-
 
     this.decode = decoder(this)({
         Reader : Reader,
@@ -574,7 +567,6 @@ Type._configure = function (){
     Reader    = require("./reader");
     util      = require("./util");
     verifier  = require("./verifier");
-    encoder   = require("./encoder");
     decoder   = require("./decoder");
     Service   = require("./service");
     wrappers  = require("./wrappers");

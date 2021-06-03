@@ -23,7 +23,6 @@
 
 // Serialization
     protobuf.Writer       = require("./src/writer");
-    protobuf.encoder      = require("./src/encoder");
     protobuf.Reader       = require("./src/reader");
 
 // Utility
@@ -100,7 +99,6 @@
 
         protobuf.converter._configure();
         protobuf.decoder._configure();
-        protobuf.encoder._configure();
         protobuf.Field._configure();
         protobuf.MapField._configure();
         protobuf.Message._configure();

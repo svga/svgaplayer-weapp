@@ -1,5 +1,5 @@
 import { VideoEntity } from "./video_entity";
-import { inflate } from "pako";
+const { inflate } = require("./pako");
 const { ProtoMovieEntity } = require("./proto");
 
 export class Parser {

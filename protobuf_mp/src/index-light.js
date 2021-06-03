@@ -72,7 +72,6 @@ function loadSync(filename, root) {
 protobuf.loadSync = loadSync;
 
 // Serialization
-protobuf.encoder          = require("./encoder");
 protobuf.decoder          = require("./decoder");
 protobuf.verifier         = require("./verifier");
 protobuf.converter        = require("./converter");
@@ -85,7 +84,7 @@ protobuf.Enum             = require("./enum");
 protobuf.Type             = require("./type");
 protobuf.Field            = require("./field");
 protobuf.OneOf            = require("./oneof");
-protobuf.MapField         = require("./mapfield");
+protobuf.MapField         = require("./mapField");
 protobuf.Service          = require("./service");
 protobuf.Method           = require("./method");
 
