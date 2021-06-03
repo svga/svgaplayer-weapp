@@ -8,7 +8,7 @@ export class Parser {
       wx.request({
         url: url,
         responseType: "arraybuffer",
-        success: async (res) => {
+        success: (res) => {
           const inflatedData = inflate(res.data as any);
           const movieData = ProtoMovieEntity.decode(inflatedData);
           

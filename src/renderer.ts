@@ -63,7 +63,7 @@ export class Renderer {
     };
     ctx.clearRect(areaFrame.x, areaFrame.y, areaFrame.width, areaFrame.height);
 
-    var matteSprites = new Map();
+    var matteSprites: any = {};
     var isMatteing = false;
 
     var sprites = this.videoItem.sprites;
@@ -73,19 +73,19 @@ export class Renderer {
         return;
       }
       if (sprite.imageKey?.indexOf(".matte") != -1) {
-        matteSprites.set(sprite.imageKey, sprite);
+        matteSprite[sprite.imageKey!] = sprite;
         return;
       }
       var lastSprite = sprites[index - 1];
       if (
         isMatteing &&
-        (sprite.matteKey == null ||
+        (!sprite.matteKey ||
           sprite.matteKey.length == 0 ||
           sprite.matteKey != lastSprite.matteKey)
       ) {
         isMatteing = false;
 
-        var matteSprite = matteSprites.get(sprite.matteKey);
+        var matteSprite = matteSprites[sprite.matteKey!];
         ctx.globalCompositeOperation = "destination-in";
         this.drawSprite(matteSprite, frame);
         ctx.globalCompositeOperation = "source-over";
@@ -147,17 +147,20 @@ export class Renderer {
       this.drawBezier(frameItem.maskPath);
       ctx.clip();
     }
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      img.width,
-      img.height,
-      0,
-      0,
-      frameItem.layout.width,
-      frameItem.layout.height
-    );
+    if (img) {
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        img.width,
+        img.height,
+        0,
+        0,
+        frameItem.layout.width,
+        frameItem.layout.height
+      );
+    }
+
     frameItem.shapes &&
       frameItem.shapes.forEach((shape: any) => {
         if (shape.type === "shape" && shape.pathArgs && shape.pathArgs.d) {
@@ -193,9 +196,7 @@ export class Renderer {
       });
     let dynamicText = this._dynamicText[bitmapKey];
     if (dynamicText !== undefined) {
-      ctx.font = `${dynamicText.size}px ${
-        dynamicText.family ?? 'Arial'
-      }`;
+      ctx.font = `${dynamicText.size}px ${dynamicText.family ?? "Arial"}`;
       let textWidth = ctx.measureText(dynamicText.text).width;
       ctx.fillStyle = dynamicText.color;
       let offsetX =
@@ -250,7 +251,10 @@ export class Renderer {
       ctx.fillStyle = "transparent";
     }
     if (styles && styles.lineDash) {
-      ctx.lineDashOffset = styles.lineDash;
+      ctx.setLineDash(
+        [styles.lineDash[0], styles.lineDash[1]],
+        styles.lineDash[2]
+      );
     }
   }
 
