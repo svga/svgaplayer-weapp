@@ -7,6 +7,7 @@ export class Player {
   clearsAfterStop: boolean;
   fillMode: "Forward" | "Backward";
   async setCanvas(selector: string): Promise<any>;
+  async setVideoItem(videoItem?: VideoEntity): Promise<any>;
   setContentMode(contentMode: "AspectFit" | "AspectFill" | "Fill");
   startAnimation(reverse?: boolean);
   startAnimationWithRange(range: Range, reverse?: boolean);
