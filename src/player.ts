@@ -177,11 +177,11 @@ export class Player {
     this._onFinished = callback;
   }
 
-  onFrame(callback: () => void) {
+  onFrame(callback: (frame: number) => void) {
     this._onFrame = callback;
   }
 
-  onPercentage(callback: () => void) {
+  onPercentage(callback: (percentage: number) => void) {
     this._onPercentage = callback;
   }
 
