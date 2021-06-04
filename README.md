@@ -45,9 +45,40 @@ Page({
 
 1. 通过 `npm install git+https://github.com/svga/svgaplayer-weapp.git --save` 安装依赖。
 
-2. 同上，添加 `canvas` 组件至 `wxml`。
+2. 参照以下代码添加 Canvas 并配置动画。
 
-3. 同上，在需要播放的时机，执行代码，唯一区别是 `require("svgaplayer-web")` 即可。
+```typescript
+import { Component } from 'react'
+import { View, Text, Canvas } from '@tarojs/components'
+import { Parser, Player } from "svgaplayer-weapp";
+
+import "taro-ui/dist/style/components/button.scss" // 按需引入
+import './index.scss'
+
+export default class Index extends Component {
+
+  componentDidMount () {
+    this.loadAnimation();
+  }
+
+  async loadAnimation() {
+    const parser = new Parser;
+    const player = new Player;
+    await player.setCanvas('#demoCanvas')
+    const videoItem = await parser.load("https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/angel.svga");
+    await player.setVideoItem(videoItem);
+    player.startAnimation();
+  }
+
+  render () {
+    return (
+      <View className='index'>
+        <Canvas type="2d" id="demoCanvas" style={{width: "300px", height: "300px", backgroundColor: "black"}} />
+      </View>
+    )
+  }
+}
+```
 
 ### Types
 
