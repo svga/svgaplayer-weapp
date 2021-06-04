@@ -5,19 +5,33 @@ const { ProtoMovieEntity } = require("./proto");
 export class Parser {
   load(url: string): Promise<VideoEntity> {
     return new Promise((resolver, rejector) => {
-      wx.request({
-        url: url,
-        responseType: "arraybuffer",
-        success: (res) => {
-          const inflatedData = inflate(res.data as any);
-          const movieData = ProtoMovieEntity.decode(inflatedData);
-          
-          resolver(new VideoEntity(movieData));
-        },
-        fail: (error) => {
-          rejector(error);
-        },
-      });
+      if (url.indexOf("http://") === 0 || url.indexOf("https://") === 0) {
+        wx.request({
+          url: url,
+          responseType: "arraybuffer",
+          success: (res) => {
+            const inflatedData = inflate(res.data as any);
+            const movieData = ProtoMovieEntity.decode(inflatedData);
+
+            resolver(new VideoEntity(movieData));
+          },
+          fail: (error) => {
+            rejector(error);
+          },
+        });
+      } else {
+        wx.getFileSystemManager().readFile({
+          filePath: url,
+          success: (res) => {
+            const inflatedData = inflate(res.data as any);
+            const movieData = ProtoMovieEntity.decode(inflatedData);
+            resolver(new VideoEntity(movieData));
+          },
+          fail: (error) => {
+            rejector(error);
+          },
+        });
+      }
     });
   }
 }

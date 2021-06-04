@@ -80,9 +80,11 @@ export class ValueAnimator {
   }
 
   doDeltaTime(deltaTime: number) {
+    let ended = false;
     if (deltaTime >= this.duration * this.loops) {
       this.mCurrentFrication = this.fillRule === 1 ? 0.0 : 1.0;
       this.mRunning = false;
+      ended = true;
     } else {
       this.mCurrentFrication = (deltaTime % this.duration) / this.duration;
       if (this.mReverse) {
@@ -90,7 +92,7 @@ export class ValueAnimator {
       }
     }
     this.onUpdate(this.animatedValue());
-    if (this.mRunning === false) {
+    if (this.mRunning === false && ended) {
       this.onEnd();
     }
   }
