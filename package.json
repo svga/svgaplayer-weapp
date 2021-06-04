@@ -2,7 +2,7 @@
   "name": "svgaplayer-weapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/svgaplayer.weapp.js",
   "typings": "svgaplayer-weapp.d.ts",
   "scripts": {
     "build": "node build.js > ./dist/svgaplayer.weapp.js"
