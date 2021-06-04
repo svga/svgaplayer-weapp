@@ -4,6 +4,10 @@
 
 示例代码片段 https://developers.weixin.qq.com/s/u2JBSOmy7rqU
 
+请仔细阅读文档和示例，如有疑问，可添加作者微信(ponycui)，有偿提供技术服务。
+
+有偿提供其它平台小程序 svgaplayer 开发服务。
+
 ## 安装方法
 
 ### 原生小程序
