@@ -178,6 +178,6 @@ interface DynamicText {
 }
 ```
 
-## 感谢作者
+## 感谢或联系作者
 
-![](https://github.com/svga/SVGAPlayer-iOS/blob/master/backer/wechat.jpg?raw=true)
+![](https://github.com/PonyCui/ponycui.github.io/blob/master/contact.png?raw=true)
