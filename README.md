@@ -180,4 +180,4 @@ interface DynamicText {
 
 ## 感谢或联系作者
 
-![](https://github.com/PonyCui/ponycui.github.io/blob/master/contact.png?raw=true)
+![](https://cdn.jsdelivr.net/gh/PonyCui/ponycui.github.io@master/contact.png)
