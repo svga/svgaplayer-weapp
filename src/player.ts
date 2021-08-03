@@ -3,7 +3,9 @@
 import { Renderer } from "./renderer";
 import { ValueAnimator } from "./value_animator";
 import { VideoEntity } from "./video_entity";
+import { getMiniBridge } from './adaptor';
 
+const wx = getMiniBridge();
 interface Range {
   location: number;
   length: number;
