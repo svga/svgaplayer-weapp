@@ -47,6 +47,52 @@ Page({
 })
 ```
 
+### 原生小程序（支付宝）
+1. 直接复制 `./dist/svgaplayer.weapp.js` 到你的小程序工程目录下。
+
+2. 由于需要使用到[my.getFileSystemManager](https://opendocs.alipay.com/mini/api/0226oc)相关的API，请先为小程序添加[文件管理器](https://opendocs.alipay.com/mini/introduce/022rw2#%E6%B7%BB%E5%8A%A0%E8%83%BD%E5%8A%9B)能力。添加完毕后需要重新预览方可调用相关API。
+
+3. 在需要添加播放器的 `axml` 文件内，添加 `canvas` 组件，注意 canvas 的 id 必填，后面会用到，且type 必须为 2d。因为svga动画所需的各项前置能力支付宝基础库2.7.3以上才全部支持，请确保支付宝小程序已[启用基础库2.0](https://opendocs.alipay.com/mini/framework/lib-upgrade-v2)。
+
+```xml
+<!-- page.axml -->
+<view class="container">
+  <canvas id="demoCanvas" type="2d" onReady="onCanvasReady" style="width: 300px; height: 300px; background-color: black"></canvas>
+</view>
+```
+
+4. 在需要播放的时机，播放svga逻辑请在[onReady事件](https://opendocs.alipay.com/mini/component/canvas)触发之后执行，在这个时刻之前执行可能因native canvas还未初始化完毕而出现异常。
+
+5. 若需要读取本地文件，需要在`mini.project.json`内配置需要读取的内容。例如
+```json
+{
+  "include": [
+    "assets/*.svg"
+  ]
+}
+```
+
+```js
+const { Parser, Player } = require("../../libs/svgaplayer.weapp"); // 此处替换为 svgaplayer.weapp.js 放置位置
+
+Page({
+  data: {
+  },
+  async onCanvasReady() {
+    try {
+      const parser = new Parser;
+      const player = new Player;
+      await player.setCanvas('#demoCanvas')
+      const videoItem = await parser.load("https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/angel.svga");
+      await player.setVideoItem(videoItem);
+      player.startAnimation();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+})
+```
+
 ### Taro
 
 1. 通过 `npm install git+https://github.com/svga/svgaplayer-weapp.git --save` 安装依赖。
