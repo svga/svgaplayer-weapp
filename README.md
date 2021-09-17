@@ -83,6 +83,7 @@ Page({
       const parser = new Parser;
       const player = new Player;
       await player.setCanvas('#demoCanvas')
+      // await player.setCanvas('#demoCanvas', this.selectComponent('#component_id'))
       const videoItem = await parser.load("https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/angel.svga");
       await player.setVideoItem(videoItem);
       player.startAnimation();
@@ -155,8 +156,9 @@ npm 包已附带 `Types`，可支持 `TypeScript` 代码提示。
 `fillMode = "Forward"`
 属性，为 Forward 时，表示动画播放结束后保留在最后一帧。为 Backward 时，表示保留在第一帧。
 
-`async setCanvas(selector: string): Promise<any>`
+`async setCanvas(selector: string, component?: Component.TrivialInstance): Promise<any>`
 设置目标 canvas，这里需要填入 selector，比如 id="demoCanvas"，则填 #demoCanvas。
+如果 Canvas 在组件内，则在第二个参数填入 Component 的实例。
 
 `async setVideoItem(videoItem?: VideoEntity): Promise<any>`
 设置需要播放的 `VideoEntity` 动画实体。

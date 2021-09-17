@@ -3,7 +3,7 @@
 import { Renderer } from "./renderer";
 import { ValueAnimator } from "./value_animator";
 import { VideoEntity } from "./video_entity";
-import { getMiniBridge } from './adaptor';
+import { getMiniBridge } from "./adaptor";
 
 const wx = getMiniBridge();
 interface Range {
@@ -23,9 +23,15 @@ export class Player {
   canvas?: WechatMiniprogram.Canvas;
   ctx?: WechatMiniprogram.CanvasContext;
 
-  async setCanvas(selector: string): Promise<any> {
+  async setCanvas(
+    selector: string,
+    component?: WechatMiniprogram.Component.TrivialInstance
+  ): Promise<any> {
     return new Promise((resolver, rej) => {
-      const query = wx.createSelectorQuery();
+      let query = wx.createSelectorQuery();
+      if (component) {
+        query = query.in(component);
+      }
       query
         .select(selector)
         .fields({ node: true, size: true })
