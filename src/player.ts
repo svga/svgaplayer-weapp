@@ -68,8 +68,12 @@ export class Player {
     if (videoItem) {
       const keyedImages = await Promise.all(
         Object.keys(videoItem.spec.images).map(async (it) => {
-          const data = await this.loadWXImage(videoItem.spec.images[it]);
-          return { key: it, value: data };
+          try {
+            const data = await this.loadWXImage(videoItem.spec.images[it]);
+            return { key: it, value: data };
+          } catch (error) {
+            return { key: it, value: undefined };
+          }
         })
       );
       let decodedImages: { [key: string]: any } = {};

@@ -2,7 +2,7 @@
 
 专为微信小程序开发的 SVGA 播放器，已在 iOS 及 Android 手机上测试通过。
 
-示例代码片段 https://developers.weixin.qq.com/s/u2JBSOmy7rqU
+示例代码片段 https://developers.weixin.qq.com/s/grK1TTmt7pth
 
 请仔细阅读文档和示例，如有疑问，可添加作者微信(ponycui)，可提供技术服务。
 
