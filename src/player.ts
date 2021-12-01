@@ -247,7 +247,7 @@ export class Player {
         this._onFrame(this._currentFrame);
       }
       if (typeof this._onPercentage === "function") {
-        this._onPercentage(this._currentFrame + 1 / videoItem.frames);
+        this._onPercentage((this._currentFrame + 1) / videoItem.frames);
       }
     };
     this._animator.onEnd = () => {
