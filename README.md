@@ -10,6 +10,8 @@
 
 轻点 GitHub Star，让更多人看到该项目。
 
+关注作者另外一个开源项目，[MPFlutter](https://mpflutter.com)，使用 Flutter 开发微信小程序。
+
 ## 安装方法
 
 ### 原生小程序
