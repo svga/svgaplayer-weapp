@@ -1,5 +1,5 @@
 import { VideoEntity } from "./video_entity";
-import { getMiniBridge } from './adaptor';
+import { getMiniBridge } from "./adaptor";
 const { inflate } = require("./pako");
 const { ProtoMovieEntity } = require("./proto");
 const wx = getMiniBridge();
@@ -14,10 +14,13 @@ export class Parser {
           dataType: "arraybuffer",
           responseType: "arraybuffer",
           success: (res) => {
-            const inflatedData = inflate(res.data as any);
-            const movieData = ProtoMovieEntity.decode(inflatedData);
-
-            resolver(new VideoEntity(movieData));
+            try {
+              const inflatedData = inflate(res.data as any);
+              const movieData = ProtoMovieEntity.decode(inflatedData);
+              resolver(new VideoEntity(movieData));
+            } catch (error) {
+              rejector(error);
+            }
           },
           fail: (error) => {
             rejector(error);
@@ -27,9 +30,13 @@ export class Parser {
         wx.getFileSystemManager().readFile({
           filePath: url,
           success: (res) => {
-            const inflatedData = inflate(res.data as any);
-            const movieData = ProtoMovieEntity.decode(inflatedData);
-            resolver(new VideoEntity(movieData));
+            try {
+              const inflatedData = inflate(res.data as any);
+              const movieData = ProtoMovieEntity.decode(inflatedData);
+              resolver(new VideoEntity(movieData));
+            } catch (error) {
+              rejector(error);
+            }
           },
           fail: (error) => {
             rejector(error);
